@@ -1,0 +1,11 @@
+{
+  "name": "api-restaurant-rocketseat",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    
+  },
+  "author": "Baggio",
+  "license": "ISC",
+  "description": "API para gerenciar pedidos das mesas de um restaurante"
+}
