@@ -9,6 +9,16 @@ class ProductController {
       next(error);
     }
   }
+
+  async create(request: Request, response: Response, next: NextFunction) {
+    try {
+      const { name, price } = request.body;
+
+      return response.status(201).json({ name, price });      
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export { ProductController };
