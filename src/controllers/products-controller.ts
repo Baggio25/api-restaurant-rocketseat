@@ -5,7 +5,26 @@ import { z } from "zod";
 class ProductController {
   async index(request: Request, response: Response, next: NextFunction) {
     try {
-      return response.json({ message: "OK" })
+      const { id } = request.params;
+      const product = await knex("products")
+        .select()
+        .where("id", `${id}`);
+
+      return response.json(product);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async show(request: Request, response: Response, next: NextFunction) {
+    try {
+      const { name } = request.query;
+      const products = await knex("products")
+        .select()
+        .whereLike("name", `%${name ?? ""}%`)
+        .orderBy("name");
+
+      return response.json(products)
     } catch (error) {
       next(error);
     }
