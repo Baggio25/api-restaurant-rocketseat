@@ -5,7 +5,12 @@ import { z } from "zod";
 class ProductController {
   async index(request: Request, response: Response, next: NextFunction) {
     try {
-      const { id } = request.params;
+      const id = z
+        .string()
+        .transform((value) => Number(value))
+        .refine((value) => !isNaN(value), { message: "Id deve ser um número"})
+        .parse(request.params.id);
+
       const product = await knex("products")
         .select()
         .where("id", `${id}`);
@@ -46,6 +51,33 @@ class ProductController {
       next(error);
     }
   }
+
+  async update(request: Request, response: Response, next: NextFunction) {
+    try {
+      const id = z
+                .string()
+                .transform((value) => Number(value))
+                .refine((value) => !isNaN(value), { message: "Id deve ser um número"})
+                .parse(request.params.id);
+
+      const bodySchema = z.object({
+        name: z.string({ required_error: "Nome é obrigatório" }).trim(),
+        price: z.number({ required_error: "Preço é obritatório" }).nonnegative({ message: "Preço não pode ser negativo "})
+      });
+
+      const { name, price } = bodySchema.parse(request.body);
+
+      await knex<ProductRepository>("products")
+        .update({ name, price, updated_at: knex.fn.now() })
+        .where({ id });
+
+      return response.json();
+    } catch (error) {
+      next(error);
+    }
+  }
+
+
 }
 
 export { ProductController };
