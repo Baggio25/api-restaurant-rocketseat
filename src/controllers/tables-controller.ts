@@ -5,6 +5,7 @@ import { knex } from "@/database/knex";
 class TablesController {
   async show(request: Request, response: Response, next: NextFunction) {
     try {
+
       const tables = await knex<TableRepository>("tables")
         .select()
         .orderBy("table_number");
