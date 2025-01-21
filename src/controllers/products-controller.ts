@@ -28,7 +28,7 @@ class ProductController {
       const products = await knex("products")
         .select()
         .whereLike("name", `%${name ?? ""}%`)
-        .orderBy("name");
+        .orderBy("id", "desc");
 
       return response.json(products)
     } catch (error) {
