@@ -22,7 +22,7 @@ class TablesSessionsController {
         .first();
       
       if(session && !session.closed_at) {
-        throw new AppError("Essa mesa está aberta!");
+        throw new AppError("Essa mesa já está aberta!");
       }
 
       await knex<TableSessionRepository>("tables_sessions").insert({
@@ -55,7 +55,23 @@ class TablesSessionsController {
         .refine((value) => !isNaN(value), { message: "Id precisa ser um número"})
         .parse(request.params.id);
 
-        return response.json();
+      const session = await knex<TableSessionRepository>("tables_sessions")
+        .where({ id })
+        .first();
+
+      if(!session) {
+        throw new AppError("Sessão não encontrada!");
+      }
+      
+      if(session.closed_at) {
+        throw new AppError("Sessão já está fechada!");
+      }
+
+      await knex<TableSessionRepository>("tables_sessions")
+        .update({ closed_at : knex.fn.now() })
+        .where({ id })
+
+      return response.json();
     } catch (error) {
       next(error);
     }
