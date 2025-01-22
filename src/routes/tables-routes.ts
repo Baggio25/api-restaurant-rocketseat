@@ -2,9 +2,9 @@
 import { Router } from "express";
 import { TablesController } from "@/controllers/tables-controller";
 
-const tableRoutes = Router();
+const tablesRoutes = Router();
 const tablesController = new TablesController();
 
-tableRoutes.get("/", tablesController.show);
+tablesRoutes.get("/", tablesController.show);
 
-export { tableRoutes };
+export { tablesRoutes };
