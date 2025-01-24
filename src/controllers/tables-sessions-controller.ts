@@ -22,7 +22,7 @@ class TablesSessionsController {
         .first();
       
       if(session && !session.closed_at) {
-        throw new AppError("Essa mesa já está aberta!");
+        throw new AppError("Essa mesa já está ocupada!");
       }
 
       await knex<TableSessionRepository>("tables_sessions").insert({
